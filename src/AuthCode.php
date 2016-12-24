@@ -11,7 +11,14 @@ class AuthCode extends Model
      *
      * @var string
      */
-    protected $table = 'oauth_auth_codes';
+    protected $table = 'auth_auth_codes';
+
+    /**
+     * The database connection used by the model.
+     *
+     * @var string
+     */
+    protected $connection = 'user';
 
     /**
      * The guarded attributes on the model.

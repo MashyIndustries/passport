@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOauthRefreshTokensTable extends Migration
+class CreateAuthAccessTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateOauthRefreshTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('oauth_refresh_tokens', function (Blueprint $table) {
+        Schema::connection('user')->create('auth_access_tokens', function (Blueprint $table) {
             $table->string('id', 100)->primary();
-            $table->string('access_token_id', 100)->index();
+            $table->integer('user_id')->index()->nullable();
+            $table->integer('client_id');
+            $table->string('name')->nullable();
+            $table->text('scopes')->nullable();
             $table->boolean('revoked');
+            $table->timestamps();
             $table->dateTime('expires_at')->nullable();
         });
     }
@@ -28,6 +32,6 @@ class CreateOauthRefreshTokensTable extends Migration
      */
     public function down()
     {
-        Schema::drop('oauth_refresh_tokens');
+        Schema::connection('user')->dropIfExists('auth_access_tokens');
     }
 }

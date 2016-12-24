@@ -11,7 +11,14 @@ class Client extends Model
      *
      * @var string
      */
-    protected $table = 'oauth_clients';
+    protected $table = 'auth_clients';
+
+    /**
+     * The database connection used by the model.
+     *
+     * @var string
+     */
+    protected $connection = 'site';
 
     /**
      * The guarded attributes on the model.

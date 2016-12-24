@@ -11,8 +11,15 @@ class Token extends Model
      *
      * @var string
      */
-    protected $table = 'oauth_access_tokens';
+    protected $table = 'auth_access_tokens';
 
+    /**
+     * The database connection used by the model.
+     *
+     * @var string
+     */
+    protected $connection = 'user';
+    
     /**
      * Indicates if the IDs are auto-incrementing.
      *

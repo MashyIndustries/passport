@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOauthClientsTable extends Migration
+class CreateAuthClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOauthClientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('oauth_clients', function (Blueprint $table) {
+        Schema::connection('site')->create('auth_clients', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->index()->nullable();
             $table->string('name');
@@ -33,6 +33,6 @@ class CreateOauthClientsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('oauth_clients');
+        Schema::connection('user')->dropIfExists('auth_clients');
     }
 }
