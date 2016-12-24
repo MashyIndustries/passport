@@ -33,6 +33,6 @@ class CreateAuthClientsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('user')->dropIfExists('auth_clients');
+        Schema::connection('site')->dropIfExists('auth_clients');
     }
 }

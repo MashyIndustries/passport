@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Routing\Registrar as Router;
 
 class RouteRegistrar
@@ -30,12 +31,15 @@ class RouteRegistrar
      * @return void
      */
     public function all()
-    {
-        $this->forAuthorization();
-        $this->forAccessTokens();
-        $this->forTransientTokens();
-        $this->forClients();
-        $this->forPersonalAccessTokens();
+    {  
+        Route::group(['prefix' => 'auth', "middleware" => 'api'], function(){
+            $this->forAuthorization();
+            $this->forAccessTokens();
+            $this->forTransientTokens();
+            $this->forClients();
+            $this->forPersonalAccessTokens();
+        });
+       
     }
 
     /**
@@ -45,7 +49,7 @@ class RouteRegistrar
      */
     public function forAuthorization()
     {
-        $this->router->group(['middleware' => ['web', 'auth']], function ($router) {
+        Route::group(['middleware' => ['auth:api']], function ($router) {
             $router->get('/oauth/authorize', [
                 'uses' => 'AuthorizationController@authorize',
             ]);
@@ -72,7 +76,7 @@ class RouteRegistrar
             'middleware' => 'throttle'
         ]);
 
-        $this->router->group(['middleware' => ['web', 'auth']], function ($router) {
+        $this->router->group(['middleware' => ['auth:api']], function ($router) {
             $router->get('/oauth/tokens', [
                 'uses' => 'AuthorizedAccessTokenController@forUser',
             ]);
@@ -91,7 +95,7 @@ class RouteRegistrar
     public function forTransientTokens()
     {
         $this->router->post('/oauth/token/refresh', [
-            'middleware' => ['web', 'auth'],
+            'middleware' => ['auth:api'],
             'uses' => 'TransientTokenController@refresh',
         ]);
     }
@@ -103,7 +107,7 @@ class RouteRegistrar
      */
     public function forClients()
     {
-        $this->router->group(['middleware' => ['web', 'auth']], function ($router) {
+        $this->router->group(['middleware' => ['auth:api']], function ($router) {
             $router->get('/oauth/clients', [
                 'uses' => 'ClientController@forUser',
             ]);
@@ -129,7 +133,7 @@ class RouteRegistrar
      */
     public function forPersonalAccessTokens()
     {
-        $this->router->group(['middleware' => ['web', 'auth']], function ($router) {
+        $this->router->group(['middleware' => ['auth:api']], function ($router) {
             $router->get('/oauth/scopes', [
                 'uses' => 'ScopeController@all',
             ]);
