@@ -1,5 +1,5 @@
 {
-    "name": "laravel/passport",
+    "name": "mashyindustries/passport",
     "description": "Laravel Passport provides OAuth2 server support to Laravel.",
     "keywords": ["laravel", "passport", "oauth"],
     "license": "MIT",
@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Laravel\\Passport\\": "src/"
+            "MashyIndustries\\Passport\\": "src/"
         }
     },
     "extra": {
