@@ -3,27 +3,9 @@
 namespace Laravel\Passport;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Contracts\Routing\Registrar as Router;
 
 class RouteRegistrar
 {
-    /**
-     * The router implementation.
-     *
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * Create a new route registrar instance.
-     *
-     * @param  Router  $router
-     * @return void
-     */
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
 
     /**
      * Register routes for transient tokens, clients, and personal access tokens.
@@ -50,15 +32,15 @@ class RouteRegistrar
     public function forAuthorization()
     {
         Route::group(['middleware' => ['auth:api']], function ($router) {
-            $router->get('/oauth/authorize', [
+            Route::get('authorize', [
                 'uses' => 'AuthorizationController@authorize',
             ]);
 
-            $router->post('/oauth/authorize', [
+            Route::post('authorize', [
                 'uses' => 'ApproveAuthorizationController@approve',
             ]);
 
-            $router->delete('/oauth/authorize', [
+            Route::delete('authorize', [
                 'uses' => 'DenyAuthorizationController@deny',
             ]);
         });
@@ -71,17 +53,17 @@ class RouteRegistrar
      */
     public function forAccessTokens()
     {
-        $this->router->post('/oauth/token', [
+        Route::post('token', [
             'uses' => 'AccessTokenController@issueToken',
             'middleware' => 'throttle'
         ]);
 
-        $this->router->group(['middleware' => ['auth:api']], function ($router) {
-            $router->get('/oauth/tokens', [
+        Route::group(['middleware' => ['auth:api']], function ($router) {
+            Route::get('tokens', [
                 'uses' => 'AuthorizedAccessTokenController@forUser',
             ]);
 
-            $router->delete('/oauth/tokens/{token_id}', [
+            Route::delete('tokens/{token_id}', [
                 'uses' => 'AuthorizedAccessTokenController@destroy',
             ]);
         });
@@ -94,7 +76,7 @@ class RouteRegistrar
      */
     public function forTransientTokens()
     {
-        $this->router->post('/oauth/token/refresh', [
+        Route::post('token/refresh', [
             'middleware' => ['auth:api'],
             'uses' => 'TransientTokenController@refresh',
         ]);
@@ -107,20 +89,20 @@ class RouteRegistrar
      */
     public function forClients()
     {
-        $this->router->group(['middleware' => ['auth:api']], function ($router) {
-            $router->get('/oauth/clients', [
+        Route::group(['middleware' => ['auth:api']], function ($router) {
+            Route::get('clients', [
                 'uses' => 'ClientController@forUser',
             ]);
 
-            $router->post('/oauth/clients', [
+            Route::post('clients', [
                 'uses' => 'ClientController@store',
             ]);
 
-            $router->put('/oauth/clients/{client_id}', [
+            Route::put('clients/{client_id}', [
                 'uses' => 'ClientController@update',
             ]);
 
-            $router->delete('/oauth/clients/{client_id}', [
+            Route::delete('clients/{client_id}', [
                 'uses' => 'ClientController@destroy',
             ]);
         });
@@ -133,20 +115,20 @@ class RouteRegistrar
      */
     public function forPersonalAccessTokens()
     {
-        $this->router->group(['middleware' => ['auth:api']], function ($router) {
-            $router->get('/oauth/scopes', [
+        Route::group(['middleware' => ['auth:api']], function ($router) {
+            Route::get('scopes', [
                 'uses' => 'ScopeController@all',
             ]);
 
-            $router->get('/oauth/personal-access-tokens', [
+            Route::get('personal-access-tokens', [
                 'uses' => 'PersonalAccessTokenController@forUser',
             ]);
 
-            $router->post('/oauth/personal-access-tokens', [
+            Route::post('personal-access-tokens', [
                 'uses' => 'PersonalAccessTokenController@store',
             ]);
 
-            $router->delete('/oauth/personal-access-tokens/{token_id}', [
+            Route::delete('personal-access-tokens/{token_id}', [
                 'uses' => 'PersonalAccessTokenController@destroy',
             ]);
         });
